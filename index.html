@@ -4,150 +4,422 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BS Garage</title>
+<meta name="description" content="BS Garage — drift builds, track days, and tropical thrash. S14 Zenki.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌺</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&amp;family=Outfit:wght@400;600;800&amp;family=Noto+Sans+JP:wght@500;700&amp;display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0b0b0d;
-    --bg-2: #141417;
-    --line: #232328;
-    --text: #eceef1;
-    --muted: #8b8d95;
-    --accent: #ff3d2e;
-    --accent-2: #ffb400;
+    --cyan-lt:  #A8F2FA;
+    --cyan:     #34C6E0;
+    --cyan-dk:  #1B93B8;
+    --pink:     #FF3D93;
+    --pink-lt:  #FFAECB;
+    --green-lt: #C6F07A;
+    --green:    #5FC257;
+    --ink:      #0E3A46;
+    --paper:    #FFFFFF;
+    --wash-1:   #FFFFFF;
+    --wash-2:   #E9FAFD;
+    --body-tx:  #14424F;
+    --muted:    #5C8792;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --wash-1: #06222E;
+      --wash-2: #0B3B4E;
+      --body-tx: #DCF6FB;
+      --muted:  #7FB3C0;
+    }
   }
 
   * { box-sizing: border-box; }
 
-  html, body {
-    height: 100%;
-    margin: 0;
-  }
+  html, body { height: 100%; margin: 0; }
+  html { overflow-x: hidden; } /* decorative clusters bleed past the edge; clip rather than pan */
 
   body {
-    background: radial-gradient(circle at 50% -10%, var(--bg-2), var(--bg) 60%);
-    color: var(--text);
-    font-family: "Helvetica Neue", Arial, sans-serif;
+    background: radial-gradient(120% 90% at 50% 0%, var(--wash-1) 0%, var(--wash-2) 100%);
+    color: var(--body-tx);
+    font-family: "Outfit", "Helvetica Neue", Arial, sans-serif;
+    min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 100vh;
     overflow-x: hidden;
     position: relative;
+    padding: 2rem 1.25rem 5rem;
   }
 
-  /* tire-mark stripes drifting across the background */
-  .stripe {
+  /* die-cut sticker keyline: white edge + dark ink edge, like vinyl decals */
+  .sticker { filter: url(#stickerEdge); }
+
+  /* ---------- floral clusters ---------- */
+  .cluster {
     position: absolute;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--accent), transparent);
-    opacity: 0.35;
-    filter: blur(0.5px);
-    transform: rotate(-8deg);
+    pointer-events: none;
+    z-index: 0;
   }
-  .stripe.s1 { top: 18%; width: 140%; left: -20%; animation: drift 9s ease-in-out infinite; }
-  .stripe.s2 { top: 62%; width: 160%; left: -30%; background: linear-gradient(90deg, transparent, var(--accent-2), transparent); animation: drift 12s ease-in-out infinite reverse; }
-  .stripe.s3 { top: 85%; width: 120%; left: -10%; animation: drift 7s ease-in-out infinite; }
+  .cluster-a { top: -2.25rem; left: -2.25rem;  width: clamp(240px, 33vw, 420px); transform: rotate(-4deg); }
+  .cluster-b { bottom: 0.25rem; right: -2.5rem; width: clamp(220px, 31vw, 400px); transform: rotate(3deg); }
 
-  @keyframes drift {
-    0%, 100% { transform: rotate(-8deg) translateX(0); }
-    50% { transform: rotate(-8deg) translateX(3%); }
+  @media (max-width: 640px) {
+    .cluster-a { top: -1.5rem; left: -3.5rem; width: 240px; opacity: 0.9; }
+    .cluster-b { bottom: 2.5rem; right: -4rem; width: 225px; opacity: 0.9; }
+    .badge { font-size: 0.62rem; letter-spacing: 0.16em; padding: 0.4rem 0.85rem; }
+    .tagline { font-size: 0.95rem; }
   }
 
+  /* ---------- hero ---------- */
   .card {
     position: relative;
-    z-index: 1;
+    z-index: 2;
     text-align: center;
-    padding: 3rem 2.5rem;
-    max-width: 560px;
+    max-width: 680px;
+    width: 100%;
+    min-width: 0; /* let the SVG wordmark shrink instead of forcing its 900px intrinsic width */
+  }
+
+  .glow {
+    position: absolute;
+    z-index: 1;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(760px, 105vw);
+    height: min(560px, 80vh);
+    background: radial-gradient(circle, rgba(52,198,224,0.22), rgba(52,198,224,0) 68%);
+    pointer-events: none;
   }
 
   .badge {
     display: inline-block;
-    font-size: 0.72rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--accent-2);
-    border: 1px solid var(--line);
-    border-radius: 999px;
-    padding: 0.35rem 0.9rem;
-    margin-bottom: 1.75rem;
-  }
-
-  h1 {
-    font-size: clamp(2.4rem, 7vw, 4rem);
-    line-height: 1;
-    margin: 0;
-    letter-spacing: -0.02em;
+    font-family: "Outfit", sans-serif;
     font-weight: 800;
+    font-size: 0.7rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #fff;
+    background: var(--pink);
+    padding: 0.45rem 1.1rem;
+    border-radius: 999px;
+    margin-bottom: 1.6rem;
+    transform: rotate(-2deg);
+    box-shadow: 0 0 0 4px #fff, 0 0 0 7px var(--ink), 0 6px 0 -1px rgba(14,58,70,0.22);
+  }
+  .badge .jp {
+    font-family: "Noto Sans JP", sans-serif;
+    letter-spacing: 0.1em;
   }
 
-  h1 span {
-    color: var(--accent);
+  .wordmark {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+  .wm { font-family: "Lilita One", Impact, "Arial Black", sans-serif; font-size: 148px; }
+  .wm-shadow { fill: var(--ink); stroke: var(--ink); stroke-width: 26; paint-order: stroke; opacity: 0.28; }
+  .wm-key    { fill: none; stroke: #fff;      stroke-width: 30; paint-order: stroke; stroke-linejoin: round; }
+  .wm-ink    { fill: none; stroke: var(--ink); stroke-width: 15; paint-order: stroke; stroke-linejoin: round; }
+  .wm-fill   { fill: url(#cyanText); }
+
+  .url-strip {
+    display: inline-block;
+    margin-top: 0.35rem;
+    font-family: "Lilita One", sans-serif;
+    font-size: clamp(0.95rem, 3vw, 1.35rem);
+    letter-spacing: 0.02em;
+    color: #fff;
+    background: linear-gradient(180deg, var(--cyan-lt), var(--cyan) 52%, var(--cyan-dk));
+    padding: 0.3rem 1.15rem 0.35rem;
+    border-radius: 6px;
+    transform: skewX(-8deg) rotate(-1deg);
+    box-shadow: 0 0 0 4px #fff, 0 0 0 7px var(--ink), 0 7px 0 -1px rgba(14,58,70,0.25);
+    text-shadow: 0 2px 0 rgba(14,58,70,0.35);
   }
 
   .tagline {
-    margin-top: 1rem;
+    margin: 2.1rem auto 0;
+    max-width: 30rem;
+    font-size: 1.02rem;
+    line-height: 1.65;
+    color: var(--body-tx);
+  }
+  .tagline .jp {
+    font-family: "Noto Sans JP", sans-serif;
     color: var(--muted);
-    font-size: 1.05rem;
-    line-height: 1.6;
+    font-size: 0.9rem;
+    letter-spacing: 0.08em;
   }
 
+  /* ---------- sticker sheet ---------- */
+  .sheet {
+    margin-top: 2.2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem 0.95rem;
+    justify-content: center;
+  }
+  .chip {
+    font-family: "Lilita One", sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #fff;
+    padding: 0.32rem 0.85rem 0.36rem;
+    border-radius: 5px;
+    box-shadow: 0 0 0 3px #fff, 0 0 0 5.5px var(--ink), 0 5px 0 -1px rgba(14,58,70,0.2);
+    white-space: nowrap;
+  }
+  .chip.c1 { background: var(--cyan);  transform: rotate(-3deg); }
+  .chip.c2 { background: var(--pink);  transform: rotate(2deg); }
+  .chip.c3 { background: var(--green); transform: rotate(-1.5deg); }
+  .chip.c4 { background: var(--ink);   transform: rotate(2.5deg); }
+  .chip.jp { font-family: "Noto Sans JP", sans-serif; font-weight: 700; font-size: 0.75rem; }
+
+  /* ---------- status ---------- */
   .status {
-    margin-top: 2.5rem;
+    margin-top: 2.4rem;
     display: inline-flex;
     align-items: center;
-    gap: 0.55rem;
-    font-size: 0.85rem;
+    gap: 0.6rem;
+    font-size: 0.88rem;
+    font-weight: 600;
     color: var(--muted);
-    border-top: 1px solid var(--line);
-    padding-top: 1.5rem;
   }
-
   .dot {
-    width: 8px;
-    height: 8px;
+    width: 9px; height: 9px;
     border-radius: 50%;
-    background: var(--accent-2);
-    box-shadow: 0 0 10px var(--accent-2);
-    animation: pulse 1.8s ease-in-out infinite;
+    background: var(--pink);
+    box-shadow: 0 0 10px var(--pink);
+    animation: pulse 1.9s ease-in-out infinite;
   }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.35; }
-  }
-
-  footer {
+  /* ---------- rocker stripe (the car's pink side skirt) ---------- */
+  .rocker {
     position: absolute;
-    bottom: 1.5rem;
-    left: 0;
-    right: 0;
-    text-align: center;
-    font-size: 0.75rem;
-    color: #4a4b52;
-    letter-spacing: 0.05em;
+    bottom: 0; left: -5%;
+    width: 110%;
+    height: 46px;
+    z-index: 1;
+    transform: rotate(-1.1deg);
+    pointer-events: none;
+  }
+  .rocker .bar {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 26px;
+    background: var(--pink);
+  }
+  .rocker .pin {
+    position: absolute;
+    bottom: 26px; left: 0; right: 0;
+    height: 5px;
+    background: var(--cyan);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dot { animation: none; }
   }
 </style>
 </head>
 <body>
 
-  <div class="stripe s1"></div>
-  <div class="stripe s2"></div>
-  <div class="stripe s3"></div>
+<!-- ============ reusable art ============ -->
+<svg class="defs" aria-hidden="true" width="0" height="0" style="position:absolute">
+  <defs>
+    <filter id="stickerEdge" x="-25%" y="-25%" width="150%" height="150%">
+      <feMorphology in="SourceAlpha" operator="dilate" radius="5" result="fat"/>
+      <feFlood flood-color="#ffffff" result="white"/>
+      <feComposite in="white" in2="fat" operator="in" result="key"/>
+      <feDropShadow dx="0" dy="4" stdDeviation="3" flood-color="#0E3A46" flood-opacity="0.28" result="shade"/>
+      <feMerge>
+        <feMergeNode in="shade"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
 
-  <div class="card">
-    <span class="badge">Est. 2026 &middot; Personal Project</span>
-    <h1>BS <span>GARAGE</span></h1>
-    <p class="tagline">
-      Drift builds, track days, and whatever else lives in the garage.<br>
-      Site's under construction &mdash; check back soon.
-    </p>
-    <div class="status">
-      <span class="dot"></span>
-      Currently wrenching on this page
-    </div>
+    <radialGradient id="gCyan" cx="50%" cy="58%" r="62%">
+      <stop offset="0%"   stop-color="#EBFDFF"/>
+      <stop offset="34%"  stop-color="#A8F2FA"/>
+      <stop offset="72%"  stop-color="#34C6E0"/>
+      <stop offset="100%" stop-color="#1B93B8"/>
+    </radialGradient>
+
+    <radialGradient id="gPink" cx="50%" cy="58%" r="62%">
+      <stop offset="0%"   stop-color="#FFF6DC"/>
+      <stop offset="26%"  stop-color="#FFE0EE"/>
+      <stop offset="68%"  stop-color="#FF9CC6"/>
+      <stop offset="100%" stop-color="#F0509B"/>
+    </radialGradient>
+
+    <linearGradient id="gLeaf" x1="0%" y1="100%" x2="30%" y2="0%">
+      <stop offset="0%"   stop-color="#2F9C55"/>
+      <stop offset="48%"  stop-color="#6FCF5A"/>
+      <stop offset="100%" stop-color="#C6F07A"/>
+    </linearGradient>
+
+    <linearGradient id="cyanText" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#F2FEFF"/>
+      <stop offset="40%"  stop-color="#96EBF7"/>
+      <stop offset="43%"  stop-color="#40CAE6"/>
+      <stop offset="100%" stop-color="#1B93B8"/>
+    </linearGradient>
+
+    <!-- tropical leaf: base at origin, tip up -->
+    <g id="leaf">
+      <path d="M0,0 C18,-10 32,-38 33,-72 C34,-100 22,-120 6,-130
+               C-10,-120 -30,-98 -31,-70 C-32,-38 -18,-10 0,0 Z"
+            fill="url(#gLeaf)" stroke="#0E3A46" stroke-width="4.5" stroke-linejoin="round"/>
+      <path d="M1,-5 C3,-40 5,-84 6,-126" fill="none" stroke="#0E3A46" stroke-width="3.4" stroke-linecap="round" opacity="0.75"/>
+      <g fill="none" stroke="#0E3A46" stroke-width="2.4" stroke-linecap="round" opacity="0.5">
+        <path d="M3,-30 C12,-38 19,-42 24,-49"/>
+        <path d="M4,-58 C14,-64 22,-68 27,-74"/>
+        <path d="M5,-86 C13,-90 18,-94 22,-99"/>
+        <path d="M2,-30 C-7,-38 -14,-42 -19,-49"/>
+        <path d="M3,-58 C-8,-64 -16,-68 -22,-74"/>
+        <path d="M4,-86 C-4,-90 -10,-94 -15,-99"/>
+      </g>
+    </g>
+
+    <!-- hibiscus: centered at origin -->
+    <g id="hibiscus">
+      <g stroke="#0E3A46" stroke-width="4.5" stroke-linejoin="round">
+        <g fill="url(#gCyan)">
+          <path id="hibPetal" d="M0,2 C-14,-26 -38,-40 -38,-66 C-38,-86 -20,-99 -4,-90
+                                 C-1.5,-94 1.5,-94 4,-90 C20,-99 38,-86 38,-66
+                                 C38,-40 14,-26 0,2 Z"/>
+          <use href="#hibPetal" transform="rotate(72)"/>
+          <use href="#hibPetal" transform="rotate(144)"/>
+          <use href="#hibPetal" transform="rotate(216)"/>
+          <use href="#hibPetal" transform="rotate(288)"/>
+        </g>
+      </g>
+      <g fill="none" stroke="#0E3A46" stroke-width="2.6" stroke-linecap="round" opacity="0.45">
+        <path d="M0,-8 C-2,-34 -2,-58 -1,-82"/>
+        <path d="M0,-8 C-12,-32 -20,-50 -25,-68" transform="rotate(72)"/>
+        <path d="M0,-8 C-2,-34 -2,-58 -1,-82" transform="rotate(144)"/>
+        <path d="M0,-8 C-2,-34 -2,-58 -1,-82" transform="rotate(216)"/>
+        <path d="M0,-8 C-2,-34 -2,-58 -1,-82" transform="rotate(288)"/>
+      </g>
+      <circle cx="0" cy="0" r="11" fill="#FFD84D" stroke="#0E3A46" stroke-width="4"/>
+      <path d="M0,-2 C10,-32 26,-62 46,-84" fill="none" stroke="#FFD84D"
+            stroke-width="6" stroke-linecap="round"/>
+      <path d="M0,-2 C10,-32 26,-62 46,-84" fill="none" stroke="#0E3A46"
+            stroke-width="2.4" stroke-linecap="round" opacity="0.55"/>
+      <g fill="#FFD84D" stroke="#0E3A46" stroke-width="2.6">
+        <circle cx="46" cy="-84" r="7"/>
+        <circle cx="35" cy="-76" r="4.6"/>
+        <circle cx="52" cy="-74" r="4.6"/>
+        <circle cx="41" cy="-92" r="4.4"/>
+        <circle cx="54" cy="-90" r="4"/>
+      </g>
+    </g>
+
+    <!-- plumeria: centered at origin, pinwheel petals -->
+    <g id="plumeria">
+      <g stroke="#0E3A46" stroke-width="4.2" stroke-linejoin="round">
+        <g fill="url(#gPink)">
+          <path id="plumPetal" d="M0,4 C11,-14 27,-30 25,-53 C23,-71 3,-78 -8,-63
+                                  C-17,-51 -11,-22 0,4 Z"/>
+          <use href="#plumPetal" transform="rotate(72)"/>
+          <use href="#plumPetal" transform="rotate(144)"/>
+          <use href="#plumPetal" transform="rotate(216)"/>
+          <use href="#plumPetal" transform="rotate(288)"/>
+        </g>
+      </g>
+      <circle cx="0" cy="0" r="10" fill="#FFD84D" stroke="#0E3A46" stroke-width="3.6"/>
+    </g>
+
+    <!-- small closed bud -->
+    <g id="bud">
+      <path d="M0,0 C-13,-9 -17,-30 -8,-46 C-3,-56 5,-56 10,-46 C19,-30 13,-9 0,0 Z"
+            fill="url(#gPink)" stroke="#0E3A46" stroke-width="4.2" stroke-linejoin="round"/>
+      <path d="M0,2 C-14,-2 -22,-12 -24,-22 C-14,-20 -5,-12 0,2 Z"
+            fill="url(#gLeaf)" stroke="#0E3A46" stroke-width="3.8" stroke-linejoin="round"/>
+      <path d="M0,2 C14,-2 22,-12 24,-22 C14,-20 5,-12 0,2 Z"
+            fill="url(#gLeaf)" stroke="#0E3A46" stroke-width="3.8" stroke-linejoin="round"/>
+    </g>
+  </defs>
+</svg>
+
+<!-- ============ corner floral clusters ============ -->
+<svg class="cluster cluster-a" viewBox="0 0 400 400" aria-hidden="true">
+  <g class="sticker">
+    <use href="#leaf" transform="translate(189,152) rotate(100) scale(1.15)"/>
+    <use href="#leaf" transform="translate(174,185) rotate(130) scale(1.2)"/>
+    <use href="#leaf" transform="translate(144,206) rotate(160) scale(1.1)"/>
+    <use href="#leaf" transform="translate(108,209) rotate(190) scale(1.05)"/>
+    <use href="#leaf" transform="translate(80,197)  rotate(215) scale(0.95)"/>
+    <use href="#leaf" transform="translate(180,105) rotate(60)  scale(0.85)"/>
+    <use href="#leaf" transform="translate(150,74)  rotate(25)  scale(0.75)"/>
+    <use href="#bud"       transform="translate(226,182) rotate(40)  scale(0.95)"/>
+    <use href="#plumeria"  transform="translate(208,78)  rotate(-18) scale(0.85)"/>
+    <use href="#hibiscus"  transform="translate(120,140) rotate(12)  scale(1.05)"/>
+    <use href="#hibiscus"  transform="translate(62,232)  rotate(-24) scale(0.72)"/>
+  </g>
+</svg>
+
+<svg class="cluster cluster-b" viewBox="0 0 400 400" aria-hidden="true">
+  <g class="sticker">
+    <use href="#leaf" transform="translate(231,221) rotate(315) scale(1.15)"/>
+    <use href="#leaf" transform="translate(256,204) rotate(340) scale(1.1)"/>
+    <use href="#leaf" transform="translate(214,294) rotate(290) scale(1.05)"/>
+    <use href="#leaf" transform="translate(298,202) rotate(15)  scale(0.95)"/>
+    <use href="#leaf" transform="translate(210,264) rotate(265) scale(0.9)"/>
+    <use href="#leaf" transform="translate(329,221) rotate(45)  scale(0.8)"/>
+    <use href="#bud"      transform="translate(200,250) rotate(-140) scale(0.9)"/>
+    <use href="#plumeria" transform="translate(196,320) rotate(24)   scale(0.85)"/>
+    <use href="#hibiscus" transform="translate(280,270) rotate(-14)  scale(1.05)"/>
+    <use href="#hibiscus" transform="translate(350,180) rotate(22)   scale(0.72)"/>
+  </g>
+</svg>
+
+<div class="glow"></div>
+
+<!-- ============ hero ============ -->
+<main class="card">
+  <span class="badge">Est. 2026 &middot; <span class="jp">ドリフト</span> &middot; Personal Project</span>
+
+  <svg class="wordmark" viewBox="0 0 900 200" role="img" aria-label="BS Garage">
+    <g class="wm" text-anchor="middle">
+      <text class="wm-shadow" x="450" y="152" transform="translate(0,9)">BS GARAGE</text>
+      <text class="wm-key"    x="450" y="152">BS GARAGE</text>
+      <text class="wm-ink"    x="450" y="152">BS GARAGE</text>
+      <text class="wm-fill"   x="450" y="152">BS GARAGE</text>
+    </g>
+  </svg>
+
+  <div><span class="url-strip">www.bs-garage.com</span></div>
+
+  <p class="tagline">
+    Drift builds, track days, and whatever else lives in the garage.<br>
+    Site's under construction &mdash; check back soon.<br>
+    <span class="jp">フレンズファースト！</span>
+  </p>
+
+  <div class="sheet">
+    <span class="chip c1">S14 Zenki</span>
+    <span class="chip c2">Tropical Thrash</span>
+    <span class="chip c3">Floral Livery</span>
+    <span class="chip c4 jp">走り屋</span>
+    <span class="chip c1">Send It</span>
   </div>
 
-  <footer>bs-garage.com</footer>
+  <div class="status">
+    <span class="dot"></span>
+    Currently wrenching on this page
+  </div>
+</main>
+
+<div class="rocker" aria-hidden="true">
+  <div class="pin"></div>
+  <div class="bar"></div>
+</div>
 
 </body>
 </html>
