@@ -210,6 +210,40 @@
   }
   @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
 
+  /* ---------- social links ---------- */
+  .socials {
+    margin-top: 2.8rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    justify-content: center;
+  }
+  .social-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    font-family: "Lilita One", sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #fff;
+    padding: 0.4rem 0.9rem;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    box-shadow: 0 0 0 3px #fff, 0 0 0 5.5px var(--ink), 0 4px 0 -1px rgba(14,58,70,0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .social-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 0 3px #fff, 0 0 0 5.5px var(--ink), 0 6px 0 -1px rgba(14,58,70,0.3);
+  }
+  .social-btn.yt { background: #FF0000; transform: rotate(-1deg); }
+  .social-btn.ig { background: linear-gradient(135deg, #833AB4, #FD1D1D, #FCAF45); transform: rotate(1.5deg); }
+  .social-btn.yt:hover, .social-btn.ig:hover { filter: brightness(0.95); }
+
   /* ---------- rocker stripe (the car's pink side skirt) ---------- */
   .rocker {
     position: absolute;
@@ -283,6 +317,11 @@
   <div class="status">
     <span class="dot"></span>
     Currently wrenching on this page
+  </div>
+
+  <div class="socials">
+    <a href="https://www.youtube.com/@BrandonSerna" class="social-btn yt" target="_blank" rel="noopener">▶ YouTube</a>
+    <a href="https://www.instagram.com/brand0ns/" class="social-btn ig" target="_blank" rel="noopener">📷 Instagram</a>
   </div>
 </main>
 
