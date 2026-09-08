@@ -53,21 +53,32 @@
     padding: 2rem 1.25rem 5rem;
   }
 
-  /* die-cut sticker keyline: white edge + dark ink edge, like vinyl decals */
-  .sticker { filter: url(#stickerEdge); }
-
   /* ---------- floral clusters ---------- */
+  /* real livery vectors (hibiscus + plumeria + vine), carries its own
+     gradients so it's loaded as an image rather than inlined (the gradient
+     ids would collide with the page's own defs) */
   .cluster {
     position: absolute;
     pointer-events: none;
+    user-select: none;
     z-index: 0;
+    height: auto;
+    filter: drop-shadow(0 6px 10px rgba(14, 58, 70, 0.22));
   }
-  .cluster-a { top: -2.25rem; left: -2.25rem;  width: clamp(240px, 33vw, 420px); transform: rotate(-4deg); }
-  .cluster-b { bottom: 0.25rem; right: -2.5rem; width: clamp(220px, 31vw, 400px); transform: rotate(3deg); }
+  .cluster-a {
+    top: -2.75rem; left: -3.5rem;
+    width: clamp(300px, 36vw, 460px);
+    transform: rotate(-6deg);
+  }
+  .cluster-b {
+    bottom: 3.25rem; right: -3.5rem; /* clears the rocker stripe's 51px height */
+    width: clamp(280px, 34vw, 430px);
+    transform: scaleX(-1) rotate(-6deg); /* mirrored so the vine curls the other way */
+  }
 
   @media (max-width: 640px) {
-    .cluster-a { top: -1.5rem; left: -3.5rem; width: 240px; opacity: 0.9; }
-    .cluster-b { bottom: 2.5rem; right: -4rem; width: 225px; opacity: 0.9; }
+    .cluster-a { top: -1.5rem;  left: -3rem;  width: 260px; opacity: 0.92; }
+    .cluster-b { bottom: 3.5rem; right: -3rem; width: 240px; opacity: 0.92; }
     .badge { font-size: 0.62rem; letter-spacing: 0.16em; padding: 0.4rem 0.85rem; }
     .tagline { font-size: 0.95rem; }
   }
@@ -229,161 +240,28 @@
 </head>
 <body>
 
-<!-- ============ reusable art ============ -->
+<!-- ============ wordmark gradient ============ -->
 <svg class="defs" aria-hidden="true" width="0" height="0" style="position:absolute">
   <defs>
-    <filter id="stickerEdge" x="-25%" y="-25%" width="150%" height="150%">
-      <feMorphology in="SourceAlpha" operator="dilate" radius="5" result="fat"/>
-      <feFlood flood-color="#ffffff" result="white"/>
-      <feComposite in="white" in2="fat" operator="in" result="key"/>
-      <feDropShadow dx="0" dy="4" stdDeviation="3" flood-color="#0E3A46" flood-opacity="0.28" result="shade"/>
-      <feMerge>
-        <feMergeNode in="shade"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
-
-    <radialGradient id="gCyan" cx="50%" cy="58%" r="62%">
-      <stop offset="0%"   stop-color="#EBFDFF"/>
-      <stop offset="34%"  stop-color="#A8F2FA"/>
-      <stop offset="72%"  stop-color="#34C6E0"/>
-      <stop offset="100%" stop-color="#1B93B8"/>
-    </radialGradient>
-
-    <radialGradient id="gPink" cx="50%" cy="58%" r="62%">
-      <stop offset="0%"   stop-color="#FFF6DC"/>
-      <stop offset="26%"  stop-color="#FFE0EE"/>
-      <stop offset="68%"  stop-color="#FF9CC6"/>
-      <stop offset="100%" stop-color="#F0509B"/>
-    </radialGradient>
-
-    <linearGradient id="gLeaf" x1="0%" y1="100%" x2="30%" y2="0%">
-      <stop offset="0%"   stop-color="#2F9C55"/>
-      <stop offset="48%"  stop-color="#6FCF5A"/>
-      <stop offset="100%" stop-color="#C6F07A"/>
-    </linearGradient>
-
     <linearGradient id="cyanText" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%"   stop-color="#F2FEFF"/>
       <stop offset="40%"  stop-color="#96EBF7"/>
       <stop offset="43%"  stop-color="#40CAE6"/>
       <stop offset="100%" stop-color="#1B93B8"/>
     </linearGradient>
-
-    <!-- tropical leaf: base at origin, tip up -->
-    <g id="leaf">
-      <path d="M0,0 C18,-10 32,-38 33,-72 C34,-100 22,-120 6,-130
-               C-10,-120 -30,-98 -31,-70 C-32,-38 -18,-10 0,0 Z"
-            fill="url(#gLeaf)" stroke="#0E3A46" stroke-width="4.5" stroke-linejoin="round"/>
-      <path d="M1,-5 C3,-40 5,-84 6,-126" fill="none" stroke="#0E3A46" stroke-width="3.4" stroke-linecap="round" opacity="0.75"/>
-      <g fill="none" stroke="#0E3A46" stroke-width="2.4" stroke-linecap="round" opacity="0.5">
-        <path d="M3,-30 C12,-38 19,-42 24,-49"/>
-        <path d="M4,-58 C14,-64 22,-68 27,-74"/>
-        <path d="M5,-86 C13,-90 18,-94 22,-99"/>
-        <path d="M2,-30 C-7,-38 -14,-42 -19,-49"/>
-        <path d="M3,-58 C-8,-64 -16,-68 -22,-74"/>
-        <path d="M4,-86 C-4,-90 -10,-94 -15,-99"/>
-      </g>
-    </g>
-
-    <!-- hibiscus: centered at origin -->
-    <g id="hibiscus">
-      <g stroke="#0E3A46" stroke-width="4.5" stroke-linejoin="round">
-        <g fill="url(#gCyan)">
-          <path id="hibPetal" d="M0,2 C-14,-26 -38,-40 -38,-66 C-38,-86 -20,-99 -4,-90
-                                 C-1.5,-94 1.5,-94 4,-90 C20,-99 38,-86 38,-66
-                                 C38,-40 14,-26 0,2 Z"/>
-          <use href="#hibPetal" transform="rotate(72)"/>
-          <use href="#hibPetal" transform="rotate(144)"/>
-          <use href="#hibPetal" transform="rotate(216)"/>
-          <use href="#hibPetal" transform="rotate(288)"/>
-        </g>
-      </g>
-      <g fill="none" stroke="#0E3A46" stroke-width="2.6" stroke-linecap="round" opacity="0.45">
-        <path d="M0,-8 C-2,-34 -2,-58 -1,-82"/>
-        <path d="M0,-8 C-12,-32 -20,-50 -25,-68" transform="rotate(72)"/>
-        <path d="M0,-8 C-2,-34 -2,-58 -1,-82" transform="rotate(144)"/>
-        <path d="M0,-8 C-2,-34 -2,-58 -1,-82" transform="rotate(216)"/>
-        <path d="M0,-8 C-2,-34 -2,-58 -1,-82" transform="rotate(288)"/>
-      </g>
-      <circle cx="0" cy="0" r="11" fill="#FFD84D" stroke="#0E3A46" stroke-width="4"/>
-      <path d="M0,-2 C10,-32 26,-62 46,-84" fill="none" stroke="#FFD84D"
-            stroke-width="6" stroke-linecap="round"/>
-      <path d="M0,-2 C10,-32 26,-62 46,-84" fill="none" stroke="#0E3A46"
-            stroke-width="2.4" stroke-linecap="round" opacity="0.55"/>
-      <g fill="#FFD84D" stroke="#0E3A46" stroke-width="2.6">
-        <circle cx="46" cy="-84" r="7"/>
-        <circle cx="35" cy="-76" r="4.6"/>
-        <circle cx="52" cy="-74" r="4.6"/>
-        <circle cx="41" cy="-92" r="4.4"/>
-        <circle cx="54" cy="-90" r="4"/>
-      </g>
-    </g>
-
-    <!-- plumeria: centered at origin, pinwheel petals -->
-    <g id="plumeria">
-      <g stroke="#0E3A46" stroke-width="4.2" stroke-linejoin="round">
-        <g fill="url(#gPink)">
-          <path id="plumPetal" d="M0,4 C11,-14 27,-30 25,-53 C23,-71 3,-78 -8,-63
-                                  C-17,-51 -11,-22 0,4 Z"/>
-          <use href="#plumPetal" transform="rotate(72)"/>
-          <use href="#plumPetal" transform="rotate(144)"/>
-          <use href="#plumPetal" transform="rotate(216)"/>
-          <use href="#plumPetal" transform="rotate(288)"/>
-        </g>
-      </g>
-      <circle cx="0" cy="0" r="10" fill="#FFD84D" stroke="#0E3A46" stroke-width="3.6"/>
-    </g>
-
-    <!-- small closed bud -->
-    <g id="bud">
-      <path d="M0,0 C-13,-9 -17,-30 -8,-46 C-3,-56 5,-56 10,-46 C19,-30 13,-9 0,0 Z"
-            fill="url(#gPink)" stroke="#0E3A46" stroke-width="4.2" stroke-linejoin="round"/>
-      <path d="M0,2 C-14,-2 -22,-12 -24,-22 C-14,-20 -5,-12 0,2 Z"
-            fill="url(#gLeaf)" stroke="#0E3A46" stroke-width="3.8" stroke-linejoin="round"/>
-      <path d="M0,2 C14,-2 22,-12 24,-22 C14,-20 5,-12 0,2 Z"
-            fill="url(#gLeaf)" stroke="#0E3A46" stroke-width="3.8" stroke-linejoin="round"/>
-    </g>
   </defs>
 </svg>
 
-<!-- ============ corner floral clusters ============ -->
-<svg class="cluster cluster-a" viewBox="0 0 400 400" aria-hidden="true">
-  <g class="sticker">
-    <use href="#leaf" transform="translate(189,152) rotate(100) scale(1.15)"/>
-    <use href="#leaf" transform="translate(174,185) rotate(130) scale(1.2)"/>
-    <use href="#leaf" transform="translate(144,206) rotate(160) scale(1.1)"/>
-    <use href="#leaf" transform="translate(108,209) rotate(190) scale(1.05)"/>
-    <use href="#leaf" transform="translate(80,197)  rotate(215) scale(0.95)"/>
-    <use href="#leaf" transform="translate(180,105) rotate(60)  scale(0.85)"/>
-    <use href="#leaf" transform="translate(150,74)  rotate(25)  scale(0.75)"/>
-    <use href="#bud"       transform="translate(226,182) rotate(40)  scale(0.95)"/>
-    <use href="#plumeria"  transform="translate(208,78)  rotate(-18) scale(0.85)"/>
-    <use href="#hibiscus"  transform="translate(120,140) rotate(12)  scale(1.05)"/>
-    <use href="#hibiscus"  transform="translate(62,232)  rotate(-24) scale(0.72)"/>
-  </g>
-</svg>
-
-<svg class="cluster cluster-b" viewBox="0 0 400 400" aria-hidden="true">
-  <g class="sticker">
-    <use href="#leaf" transform="translate(231,221) rotate(315) scale(1.15)"/>
-    <use href="#leaf" transform="translate(256,204) rotate(340) scale(1.1)"/>
-    <use href="#leaf" transform="translate(214,294) rotate(290) scale(1.05)"/>
-    <use href="#leaf" transform="translate(298,202) rotate(15)  scale(0.95)"/>
-    <use href="#leaf" transform="translate(210,264) rotate(265) scale(0.9)"/>
-    <use href="#leaf" transform="translate(329,221) rotate(45)  scale(0.8)"/>
-    <use href="#bud"      transform="translate(200,250) rotate(-140) scale(0.9)"/>
-    <use href="#plumeria" transform="translate(196,320) rotate(24)   scale(0.85)"/>
-    <use href="#hibiscus" transform="translate(280,270) rotate(-14)  scale(1.05)"/>
-    <use href="#hibiscus" transform="translate(350,180) rotate(22)   scale(0.72)"/>
-  </g>
-</svg>
+<!-- ============ corner florals ============ -->
+<!-- real livery vectors, cut from the Zenki side graphic -->
+<img class="cluster cluster-a" src="art/floral-duo.svg" alt="" aria-hidden="true">
+<img class="cluster cluster-b" src="art/floral-duo.svg" alt="" aria-hidden="true">
 
 <div class="glow"></div>
 
 <!-- ============ hero ============ -->
 <main class="card">
-  <span class="badge"></span>
+  <span class="badge">Drift Adventures </span>
 
   <svg class="wordmark" viewBox="0 0 900 200" role="img" aria-label="BS Garage">
     <g class="wm" text-anchor="middle">
@@ -401,9 +279,6 @@
     Site's under construction &mdash; check back soon.<br>
   </p>
 
-  <div class="sheet">
-
-  </div>
 
   <div class="status">
     <span class="dot"></span>
