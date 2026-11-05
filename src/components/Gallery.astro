@@ -1,0 +1,78 @@
+---
+interface Shot { src: string; alt: string; credit?: string; tall?: boolean }
+interface Props { shots: Shot[]; id?: string }
+const { shots, id = 'gallery' } = Astro.props;
+---
+<ul class="shots" id={id}>
+  {shots.map((s, i) => (
+    <li class:list={['shot', { tall: s.tall }]} style={`--r:${[-2, 1, -1, 2][i % 4]}deg`}>
+      <button type="button" class="shot-btn" aria-label={`Enlarge photo ${i + 1} of ${shots.length}`} data-full={s.src} data-alt={s.alt} data-credit={s.credit ?? ''}>
+        <img src={s.src} alt={s.alt} loading="lazy" decoding="async" />
+        {s.credit && <span class="credit">Photo: {s.credit}</span>}
+      </button>
+    </li>
+  ))}
+</ul>
+<dialog class="lightbox" aria-label="Photo viewer">
+  <div class="lb-stage"><img alt="" /><div class="lb-cap"></div></div>
+  <button class="btn sm lb-close" type="button" aria-label="Close">&times;</button>
+  <button class="btn sm lb-prev" type="button" aria-label="Previous photo">&#8249;</button>
+  <button class="btn sm lb-next" type="button" aria-label="Next photo">&#8250;</button>
+</dialog>
+<style>
+  .shots { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 28px; grid-auto-flow: dense; }
+  .shot { transform: rotate(var(--r)); transition: transform .12s; }
+  .shot:hover { transform: rotate(0) scale(1.02); }
+  .shot.tall { grid-row: span 2; }
+  .shot-btn { position: relative; display: block; width: 100%; height: 100%; padding: 0; cursor: zoom-in; background: var(--raised); border: 4px solid var(--outline); border-radius: 20px; box-shadow: var(--shadow-lg); overflow: hidden; font: inherit; color: inherit; }
+  .shot-btn img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+  .shot.tall .shot-btn img { height: 100%; aspect-ratio: auto; }
+  .credit { position: absolute; left: 10px; bottom: 10px; padding: 2px 10px; background: var(--raised); border: 2px solid var(--outline); border-radius: 999px; font-size: 12px; line-height: 16px; color: var(--text); }
+
+  .lightbox { border: 0; padding: 0; background: transparent; width: 100vw; height: 100vh; max-width: none; max-height: none; color: #fff; }
+  .lightbox::backdrop { background: rgba(8, 6, 12, .93); }
+  .lb-stage { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; width: 100%; height: 100%; padding: 4.5rem 5rem; }
+  .lb-stage img { max-width: 100%; max-height: calc(100vh - 11rem); object-fit: contain; border: 4px solid #fcfcfc; border-radius: 12px; }
+  .lb-cap { font-weight: 700; font-size: 14px; letter-spacing: .04em; color: var(--hibiscus-200); min-height: 1.2em; }
+  .lb-close { position: absolute; top: 16px; right: 16px; width: 48px; padding: 0; justify-content: center; font-size: 28px; }
+  .lb-prev, .lb-next { position: absolute; top: 50%; transform: translateY(-50%); width: 48px; padding: 0; justify-content: center; font-size: 28px; }
+  .lb-prev { left: 14px; } .lb-next { right: 14px; }
+  .lb-prev:hover, .lb-next:hover { transform: translateY(-50%); }
+  @media (max-width: 600px) {
+    .shots { grid-template-columns: 1fr; }
+    .lb-stage { padding: 4.5rem .75rem 5rem; }
+    .lb-prev, .lb-next { top: auto; bottom: 14px; transform: none; }
+    .lb-prev { left: calc(50% - 60px); } .lb-next { right: calc(50% - 60px); }
+    .lb-prev:hover, .lb-next:hover { transform: none; }
+  }
+</style>
+<script>
+  const shots = [...document.querySelectorAll<HTMLButtonElement>('.shot-btn')];
+  const dlg = document.querySelector<HTMLDialogElement>('.lightbox');
+  if (dlg && shots.length) {
+    const big = dlg.querySelector('img')!;
+    const cap = dlg.querySelector<HTMLElement>('.lb-cap')!;
+    let cur = 0;
+    let startX: number | null = null;
+    const show = (i: number) => {
+      cur = (i + shots.length) % shots.length;
+      const b = shots[cur];
+      big.src = b.dataset.full!;
+      big.alt = b.dataset.alt ?? '';
+      cap.textContent = b.dataset.credit ? `Photo: ${b.dataset.credit}` : '';
+    };
+    shots.forEach((b, i) => b.addEventListener('click', () => { show(i); if (!dlg.open) dlg.showModal(); }));
+    dlg.querySelector('.lb-close')!.addEventListener('click', () => dlg.close());
+    dlg.querySelector('.lb-prev')!.addEventListener('click', () => show(cur - 1));
+    dlg.querySelector('.lb-next')!.addEventListener('click', () => show(cur + 1));
+    dlg.addEventListener('click', (e) => { const t = e.target as HTMLElement; if (t === dlg || t.classList.contains('lb-stage')) dlg.close(); });
+    dlg.addEventListener('keydown', (e) => { if (e.key === 'ArrowLeft') show(cur - 1); if (e.key === 'ArrowRight') show(cur + 1); });
+    dlg.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, { passive: true });
+    dlg.addEventListener('touchend', (e) => {
+      if (startX === null) return;
+      const dx = e.changedTouches[0].clientX - startX;
+      if (Math.abs(dx) > 50) show(cur + (dx < 0 ? 1 : -1));
+      startX = null;
+    });
+  }
+</script>
