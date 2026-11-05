@@ -1,0 +1,117 @@
+/* BS Garage — tokens from the design system (Pearl / Night) */
+:root {
+  --pearl-050: #fcfcfc; --pearl-100: #e4e4f0; --pearl-200: #d8d8e4; --pearl-300: #b4b4c0; --pearl-700: #60546c;
+  --ink: #0c0c0c;
+  --hibiscus-200: #b4f0fc; --hibiscus-400: #44bffd; --hibiscus-800: #1a5974;
+  --lagoon-300: #57ecd7;
+  --leaf-300: #73e26c;
+  --plumeria-300: #f84da8; --plumeria-500: #f0058c; --plumeria-700: #b9006c; --plumeria-900: #7b164d;
+  --stamen-400: #fde911;
+
+  --surface: var(--pearl-100);
+  --raised: var(--pearl-050);
+  --hair: var(--pearl-200);
+  --text: var(--ink);
+  --muted: var(--pearl-700);
+  --outline: var(--ink);
+  --link: var(--plumeria-700);
+  --link-hover: var(--plumeria-900);
+  --focus: var(--hibiscus-800);
+  --accent: var(--plumeria-500);
+
+  --display: "house-of-cards", "House of cards", "Kanit", sans-serif;
+  --flash: "Shrikhand", "Kanit", serif;
+  --body: "Kanit", system-ui, sans-serif;
+
+  --shadow: 4px 4px 0 var(--outline);
+  --shadow-lg: 6px 6px 0 var(--outline);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --surface: #121016; --raised: #1c1a22; --hair: #2c2933;
+    --text: var(--pearl-050); --muted: var(--pearl-300);
+    --outline: var(--pearl-050); --link: var(--plumeria-300); --link-hover: var(--hibiscus-200);
+    --focus: var(--hibiscus-200);
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--surface); color: var(--text);
+  font: 400 16px/24px var(--body); overflow-x: hidden;
+}
+img { max-width: 100%; }
+a { color: var(--link); }
+a:hover { color: var(--link-hover); }
+a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+
+.wrap { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+.stack { display: flex; flex-direction: column; }
+
+/* type */
+.display { font-family: var(--display); font-weight: 700; font-style: italic; margin: 0; }
+.h-hero { font-size: clamp(64px, 11vw, 128px); line-height: .9; letter-spacing: -.01em; }
+.h-page { font-size: clamp(56px, 9vw, 112px); line-height: .9; }
+.h-sect { font-size: clamp(40px, 5vw, 56px); line-height: 1; }
+.h-title { font-size: 32px; line-height: 36px; }
+.label { font-size: 13px; line-height: 16px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+.muted { color: var(--muted); }
+.lead { font-size: 18px; line-height: 28px; margin: 0; max-width: 560px; }
+.lettering {
+  background: linear-gradient(180deg, var(--hibiscus-200) 0 38%, var(--hibiscus-400) 38% 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  -webkit-text-stroke: 3px var(--ink); paint-order: stroke fill;
+  filter: drop-shadow(5px 5px 0 var(--outline));
+}
+.flash { font-family: var(--flash); font-weight: 400; }
+
+/* sticker surfaces */
+.card { background: var(--raised); border: 4px solid var(--outline); border-radius: 20px; box-shadow: var(--shadow-lg); }
+.pill {
+  display: inline-block; padding: 4px 12px; border: 2px solid var(--outline); border-radius: 999px;
+  background: var(--raised); color: var(--text); font-size: 13px; line-height: 16px; font-weight: 700; letter-spacing: .06em; text-decoration: none;
+}
+.btn {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 12px 24px;
+  border: 4px solid var(--ink); border-radius: 12px; box-shadow: 4px 4px 0 var(--ink);
+  background: var(--accent); color: var(--ink); text-decoration: none; cursor: pointer;
+  font: 700 13px/16px var(--body); letter-spacing: .06em; text-transform: uppercase;
+  transition: transform .08s, box-shadow .08s;
+}
+.btn:hover { color: var(--ink); transform: translate(-1px, -1px); box-shadow: 5px 5px 0 var(--ink); }
+.btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink); }
+.btn.cyan { background: var(--hibiscus-400); }
+.btn.sm { min-height: 44px; padding: 10px 16px; }
+
+.bg-cyan { background: var(--hibiscus-400); } .bg-pink { background: var(--plumeria-300); }
+.bg-teal { background: var(--lagoon-300); } .bg-green { background: var(--leaf-300); }
+.bg-yellow { background: var(--stamen-400); } .bg-hot { background: var(--plumeria-500); }
+.on-bright { color: var(--ink); }
+
+/* photo frame (framed sticker photo) */
+.frame { position: relative; margin: 0; background: var(--raised); border: 6px solid var(--outline); border-radius: 20px; box-shadow: var(--shadow-lg); padding: 16px; }
+.frame .ph { border: 4px solid var(--ink); border-radius: 12px; overflow: hidden; background: var(--hair); aspect-ratio: 4 / 3; }
+.frame .ph img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.frame figcaption { text-align: right; padding-top: 12px; font-size: 12px; line-height: 16px; color: var(--muted); }
+.placeholder { display: flex; align-items: center; justify-content: center; text-align: center; padding: 24px; color: var(--ink); }
+
+/* decorative flowers */
+.flower { position: absolute; height: auto; pointer-events: none; }
+.band { display: flex; justify-content: center; padding: 0 24px; }
+.band img { width: 100%; max-width: 1206px; height: auto; display: block; }
+.band.flip img { transform: scaleX(-1); }
+
+/* sticker label ribbon */
+.ribbon {
+  display: inline-block; align-self: flex-start; transform: rotate(-3deg);
+  border: 4px solid var(--ink); border-radius: 12px; padding: 4px 16px; color: var(--ink);
+  font: 400 28px/32px var(--flash);
+}
+
+@media (max-width: 600px) {
+  .wrap { padding: 0 16px; }
+  .h-title { font-size: 26px; line-height: 30px; }
+  .flower.hide-sm { display: none; }
+}

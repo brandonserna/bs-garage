@@ -1,0 +1,138 @@
+---
+import Base from '../layouts/Base.astro';
+import CarCard from '../components/CarCard.astro';
+import LogCard from '../components/LogCard.astro';
+import Gallery from '../components/Gallery.astro';
+import { getCollection } from 'astro:content';
+import { getCars, getLog } from '../lib';
+import { site } from '../data/site';
+
+const cars = await getCars();
+const log = (await getLog()).slice(0, 3);
+const byId = Object.fromEntries(cars.map((c) => [c.id, c]));
+const partners = await getCollection('partners');
+const s14 = byId['s14'];
+const highlights = s14.data.gallery.slice(0, 6);
+---
+<Base>
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="wrap hero-row">
+      <div class="stack hero-copy">
+        <div class="kicker">
+          <span class="flash since">since day one</span>
+          <span class="label muted">{site.location.toUpperCase()}</span>
+        </div>
+        <h1 id="hero-title" class="display h-hero lettering">BS Garage</h1>
+        <p class="lead">Follow my journey</p>
+        <div class="ctas">
+          <a class="btn" href="#garage">MEET THE CARS
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a class="btn cyan" href="/build-log/">READ THE BUILD LOG</a>
+        </div>
+        <div class="socials">
+          <a class="btn sm cyan" href={site.youtube} target="_blank" rel="noopener">YOUTUBE</a>
+          <a class="btn sm" href={site.instagram} target="_blank" rel="noopener">INSTAGRAM</a>
+        </div>
+      </div>
+      <div class="hero-photo">
+        <figure class="frame tilt">
+          <div class="ph"><img src="/photos/528A9382.jpg" alt="S14" width="1600" height="1067" fetchpriority="high" /></div>
+          <figcaption>Silver s14</figcaption>
+          <img class="flower" src="/art/flower-1.svg" alt="" style="width:210px;left:-110px;bottom:-36px;transform:rotate(-22deg)" />
+          <img class="flower" src="/art/flower-2.svg" alt="" style="width:180px;left:-88px;bottom:-70px;transform:rotate(-6deg)" />
+          <img class="flower hide-sm" src="/art/flower-4.svg" alt="" style="width:104px;left:64px;bottom:-60px;transform:rotate(14deg)" />
+          <img class="flower" src="/art/flower-5.svg" alt="" style="width:76px;right:-30px;top:-34px;transform:rotate(-10deg)" />
+        </figure>
+      </div>
+    </div>
+    <div class="band" aria-hidden="true" style="margin-top:56px"><img src="/art/band.svg" alt="" width="1206" height="227" /></div>
+  </section>
+
+  <section id="garage" class="wrap sect" aria-labelledby="garage-title">
+    <div class="sect-head">
+      <div class="stack" style="gap:8px">
+        <span class="label muted">THE GARAGE</span>
+        <h2 id="garage-title" class="display h-sect">TWO CARS</h2>
+      </div>
+      <a href="/garage/s14/"><strong>See every spec sheet</strong></a>
+    </div>
+    <div class="cars">{cars.map((car) => <CarCard car={car} />)}</div>
+  </section>
+
+  <section class="wrap sect latest" aria-label="Latest from the garage">
+    <div class="stack feed">
+      <div class="stack" style="gap:8px">
+        <span class="label muted">BUILD LOG</span>
+        <h2 class="display h-sect">FRESH OFF THE BENCH</h2>
+      </div>
+      {log.map((e) => <LogCard entry={e} carLabel={byId[e.data.car].data.code} carColor={byId[e.data.car].data.color} />)}
+      <a href="/build-log/"><strong>All entries</strong></a>
+    </div>
+    <aside id="events" class="next card-blue" aria-labelledby="events-title">
+      <img class="flower" src="/art/flower-3.svg" alt="" style="width:124px;right:-40px;top:-60px;transform:rotate(12deg)" />
+      <span class="ribbon bg-hot">Next Session</span>
+      <h2 id="events-title" class="display" style="font-size:40px;line-height:40px">TBD</h2>
+      <p style="margin:0;font-size:18px;line-height:28px;font-weight:700">Stay tuned.</p>
+    </aside>
+  </section>
+
+  <section class="wrap sect" aria-labelledby="track-title">
+    <div class="sect-head">
+      <div class="stack" style="gap:8px">
+        <span class="label muted">ON TRACK</span>
+        <h2 id="track-title" class="display h-sect">DRIFTING</h2>
+      </div>
+      <a href="/garage/s14/#gallery"><strong>All S14 photos</strong></a>
+    </div>
+    <Gallery shots={highlights} id="home-gallery" />
+  </section>
+
+  <section class="wrap sect" aria-labelledby="partners-h">
+    <div class="sect-head">
+      <div class="stack" style="gap:8px">
+        <span class="label muted"></span>
+        <h2 id="partners-h" class="display h-sect">FRIENDS</h2>
+      </div>
+    </div>
+    <p class="lead" style="margin-bottom:24px"></p>
+    <!-- add a partner in src/data/partners.json (logo goes in public/art/partners/); add "url" to make it a link -->
+    <ul class="partners">
+      {partners.map((p, i) => {
+        const Tag = p.data.url ? 'a' : 'div';
+        return (
+          <li style={`--r:${i % 2 ? 1.2 : -1.2}deg`}>
+            <Tag class="partner card" href={p.data.url} target={p.data.url ? '_blank' : undefined} rel={p.data.url ? 'noopener' : undefined}>
+              <img src={p.data.logo} alt={`${p.data.name} logo`} width={p.data.width} height={p.data.height} loading="lazy" />
+              <span class="label">{p.data.name}</span>
+            </Tag>
+          </li>
+        );
+      })}
+    </ul>
+  </section>
+</Base>
+
+<style>
+  .hero { position: relative; padding-top: 56px; }
+  .hero-row { display: flex; flex-wrap: wrap; align-items: center; gap: 48px; padding-bottom: 24px; }
+  .hero-copy { flex: 1 1 520px; min-width: 0; gap: 24px; }
+  .kicker { display: flex; align-items: center; gap: 12px; }
+  .since { font-size: 20px; line-height: 24px; color: var(--link); transform: rotate(-4deg); display: inline-block; }
+  .ctas, .socials { display: flex; flex-wrap: wrap; gap: 16px; }
+  .ctas { padding-top: 8px; }
+  .hero-photo { flex: 1 1 440px; min-width: 0; display: flex; justify-content: center; }
+  .tilt { width: 100%; max-width: 520px; transform: rotate(3deg); }
+  .sect { padding-top: 48px; padding-bottom: 24px; }
+  .sect-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; padding-bottom: 32px; }
+  .cars { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 32px; }
+  .latest { display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start; }
+  .feed { flex: 999 1 560px; min-width: 0; gap: 24px; }
+  .next { position: relative; flex: 1 1 340px; min-width: 0; transform: rotate(-2deg); display: flex; flex-direction: column; gap: 16px; padding: 24px; background: var(--hibiscus-400); color: var(--ink); border: 6px solid var(--outline); border-radius: 20px; box-shadow: var(--shadow-lg); }
+  .partners { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 28px; }
+  .partners li { transform: rotate(var(--r)); }
+  .partner { display: flex; flex-direction: column; align-items: center; gap: 12px; width: min(300px, 100%); padding: 20px; background: #fff; color: #0c0c0c; text-decoration: none; transition: transform .12s; }
+  a.partner:hover { color: #0c0c0c; transform: rotate(0) scale(1.03); }
+  .partner img { width: 100%; height: auto; }
+  @media (max-width: 600px) { .hero { padding-top: 32px; } .hero-row { gap: 40px; } }
+</style>

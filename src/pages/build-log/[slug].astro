@@ -1,0 +1,58 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { getCars, getLog } from '../../lib';
+
+export async function getStaticPaths() {
+  const [cars, log] = await Promise.all([getCars(), getLog()]);
+  return log.map((entry, i) => ({
+    params: { slug: entry.id },
+    props: { entry, car: cars.find((c) => c.id === entry.data.car)!, newer: log[i - 1], older: log[i + 1] },
+  }));
+}
+const { entry, car, newer, older } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+const date = d.date?.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
+---
+<Base title={d.title} description={d.summary} current="log">
+  <main class="wrap page">
+    <a href="/build-log/"><strong>&larr; Build log</strong></a>
+    <article class="card post">
+      <header class="stack" style="gap:12px">
+        <div class="meta">
+          <a class={`pill bg-${car.data.color} on-bright`} href={`/garage/${car.id}/`}>{car.data.code}</a>
+          <span class="pill">{d.topic}</span>
+          {date && <span class="muted" style="font-size:12px">{date}</span>}
+        </div>
+        <h1 class="display h-page" style="font-size:clamp(40px,7vw,72px);line-height:1">{d.title}</h1>
+      </header>
+      {d.video && (
+        <div class="video">
+          <iframe src={`https://www.youtube-nocookie.com/embed/${d.video}`} title={d.title} loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+        </div>
+      )}
+      {d.photo && <img class="photo" src={d.photo.src} alt={d.photo.alt} />}
+      <div class="prose"><Content /></div>
+    </article>
+    <nav class="pager" aria-label="More entries">
+      {newer ? <a class="btn cyan sm" href={`/build-log/${newer.id}/`}>&larr; {newer.data.title}</a> : <span />}
+      {older ? <a class="btn cyan sm" href={`/build-log/${older.id}/`}>{older.data.title} &rarr;</a> : <span />}
+    </nav>
+  </main>
+</Base>
+<style>
+  .page { padding-top: 32px; padding-bottom: 48px; display: flex; flex-direction: column; gap: 24px; max-width: 860px; }
+  .post { padding: 32px; display: flex; flex-direction: column; gap: 24px; }
+  .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .video { aspect-ratio: 16 / 9; border: 4px solid var(--ink); border-radius: 12px; overflow: hidden; background: var(--ink); }
+  .video iframe { width: 100%; height: 100%; border: 0; display: block; }
+  .photo { width: 100%; height: auto; border: 4px solid var(--ink); border-radius: 12px; }
+  .prose { font-size: 18px; line-height: 28px; }
+  .prose :global(h2), .prose :global(h3) { font-family: var(--display); font-style: italic; line-height: 1.1; }
+  .prose :global(img) { height: auto; border: 4px solid var(--ink); border-radius: 12px; }
+  .prose :global(blockquote) { margin: 1em 0; padding: 4px 16px; border-left: 6px solid var(--plumeria-500); color: var(--muted); }
+  .prose :global(code) { background: var(--hair); padding: 1px 6px; border-radius: 6px; }
+  .pager { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; }
+  @media (max-width: 600px) { .post { padding: 20px; } }
+</style>
