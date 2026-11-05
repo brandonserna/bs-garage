@@ -1,0 +1,27 @@
+---
+import { site } from '../data/site';
+---
+<div class="band" aria-hidden="true"><img src="/art/band.svg" alt="" width="1206" height="227" /></div>
+<footer id="contact">
+  <div class="wrap row">
+    <div class="stack about">
+      <span class="display brand">BS GARAGE</span>
+      
+    </div>
+    <div class="links label">
+      <a href={site.instagram} target="_blank" rel="noopener">INSTAGRAM</a>
+      <a href={site.youtube} target="_blank" rel="noopener">YOUTUBE</a>
+      {site.email && <a href={`mailto:${site.email}`}>EMAIL</a>}
+    </div>
+  </div>
+  <div class="stripe" aria-hidden="true"></div>
+</footer>
+<style>
+  footer { margin-top: 32px; background: var(--raised); border-top: 4px solid var(--outline); }
+  .row { display: flex; flex-wrap: wrap; gap: 32px; justify-content: space-between; align-items: flex-start; padding-top: 40px; padding-bottom: 40px; }
+  .about { gap: 8px; max-width: 420px; }
+  .brand { font-weight: 900; font-size: 32px; line-height: 36px; }
+  .links { display: flex; flex-wrap: wrap; gap: 24px; }
+  .links a { min-height: 44px; display: inline-flex; align-items: center; }
+  .stripe { height: 20px; background: var(--accent); border-top: 4px solid var(--outline); box-shadow: inset 0 -8px 0 var(--plumeria-700); }
+</style>

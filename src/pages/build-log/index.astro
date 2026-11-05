@@ -1,0 +1,89 @@
+---
+import Base from '../../layouts/Base.astro';
+import LogCard from '../../components/LogCard.astro';
+import { getCars, getLog } from '../../lib';
+import { site } from '../../data/site';
+
+const cars = await getCars();
+const byId = Object.fromEntries(cars.map((c) => [c.id, c]));
+const log = await getLog();
+const topics = [...new Set(log.map((e) => e.data.topic))];
+---
+<Base title="Build log" description="Every part, every mistake, every coat of clear. Newest first." current="log">
+  <main class="wrap page">
+    <section class="intro stack" aria-labelledby="log-title">
+      <div class="kicker">
+        <span class="flash since">grease &amp; paint</span>
+      </div>
+      <h1 id="log-title" class="display h-page lettering">BUILD LOG</h1>
+      <p class="lead">Every part, every mistake, every coat of clear. Newest first.</p>
+      <img class="flower hide-sm" src="/art/flower-1.svg" alt="" style="width:240px;right:-20px;top:30px;transform:rotate(-28deg)" />
+      <img class="flower hide-sm" src="/art/flower-2.svg" alt="" style="width:210px;right:40px;top:-16px;transform:rotate(8deg)" />
+    </section>
+
+    <div class="cols">
+      <section class="stack feed" aria-label="Entries">
+        <div role="group" aria-label="Filter by car" class="filters">
+          <button type="button" class="pill f on" data-car="all" aria-pressed="true">ALL CARS</button>
+          {cars.map((c) => <button type="button" class="pill f" data-car={c.id} aria-pressed="false">{c.data.code}</button>)}
+        </div>
+        <ul class="entries">
+          {log.map((e) => (
+            <li data-car={e.data.car}><LogCard entry={e} carLabel={byId[e.data.car].data.code} carColor={byId[e.data.car].data.color} /></li>
+          ))}
+        </ul>
+      </section>
+
+      <aside class="stack side">
+        <section class="follow" aria-labelledby="follow-title">
+          <img class="flower" src="/art/flower-4.svg" alt="" style="width:96px;right:-30px;top:-42px;transform:rotate(16deg)" />
+          <span class="ribbon" style="background:var(--raised);color:var(--text)">Follow Along</span>
+          <h2 id="follow-title" class="display" style="font-size:32px;line-height:36px">NEW ENTRY? SEE IT FIRST</h2>
+          <a class="btn cyan" style="background:var(--plumeria-500)" href={site.youtube} target="_blank" rel="noopener">YOUTUBE</a>
+          <a class="btn" style="background:var(--raised);color:var(--text);border-color:var(--outline);box-shadow:4px 4px 0 var(--outline)" href={site.instagram} target="_blank" rel="noopener">INSTAGRAM</a>
+        </section>
+
+        <section class="card by" aria-labelledby="cars-title">
+          <h2 id="cars-title" class="label muted" style="margin:0">ENTRIES BY CAR</h2>
+          {cars.map((c) => (
+            <div class="row"><span class="who"><span class={`dot bg-${c.data.color}`} aria-hidden="true"></span>{c.data.code}</span><strong>{log.filter((e) => e.data.car === c.id).length}</strong></div>
+          ))}
+        </section>
+
+        <section class="stack" style="gap:12px" aria-labelledby="tags-title">
+          <h2 id="tags-title" class="label muted" style="margin:0">TOPICS</h2>
+          <div class="topics">{topics.map((t) => <span class="pill">{t}</span>)}</div>
+        </section>
+      </aside>
+    </div>
+  </main>
+</Base>
+<style>
+  .page { padding-top: 48px; padding-bottom: 48px; display: flex; flex-direction: column; gap: 48px; }
+  .intro { position: relative; gap: 16px; }
+  .kicker { display: flex; align-items: center; gap: 12px; }
+  .since { font-size: 20px; line-height: 24px; color: var(--link); transform: rotate(-4deg); display: inline-block; }
+  .cols { display: flex; flex-wrap: wrap; gap: 48px; align-items: flex-start; }
+  .feed { flex: 999 1 600px; min-width: 0; gap: 32px; }
+  .filters { display: flex; flex-wrap: wrap; gap: 12px; }
+  .f { min-height: 44px; padding: 8px 20px; border-width: 4px; box-shadow: var(--shadow); cursor: pointer; font-family: var(--body); }
+  .f.on { background: var(--stamen-400); color: var(--ink); }
+  .entries { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 32px; }
+  .entries li[hidden] { display: none; }
+  .side { flex: 1 1 300px; min-width: 0; gap: 32px; }
+  .follow { position: relative; transform: rotate(-2deg); background: var(--hibiscus-400); color: var(--ink); border: 6px solid var(--outline); border-radius: 20px; box-shadow: var(--shadow-lg); padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+  .follow .btn { justify-content: center; }
+  .by { padding: 24px; display: flex; flex-direction: column; gap: 12px; }
+  .row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 2px solid var(--hair); }
+  .who { display: flex; align-items: center; gap: 12px; }
+  .dot { width: 16px; height: 16px; border: 2px solid var(--ink); border-radius: 999px; }
+  .topics { display: flex; flex-wrap: wrap; gap: 8px; }
+</style>
+<script>
+  const btns = [...document.querySelectorAll<HTMLButtonElement>('.f')];
+  const items = [...document.querySelectorAll<HTMLElement>('.entries li')];
+  btns.forEach((b) => b.addEventListener('click', () => {
+    btns.forEach((x) => { const on = x === b; x.classList.toggle('on', on); x.setAttribute('aria-pressed', String(on)); });
+    items.forEach((li) => { li.hidden = b.dataset.car !== 'all' && li.dataset.car !== b.dataset.car; });
+  }));
+</script>

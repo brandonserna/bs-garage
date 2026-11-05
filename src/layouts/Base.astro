@@ -1,0 +1,32 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props { title?: string; description?: string; current?: string; }
+const { title, description = 'Two cars, one garage, a lot of tire smoke. Built at home in Littleton, CO and driven sideways.', current = '' } = Astro.props;
+const fullTitle = title ? `${title} — BS Garage` : 'BS Garage';
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="color-scheme" content="light dark" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL('/photos/528A9382.jpg', Astro.site)} />
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,400;0,700;0,900;1,700;1,900&family=Shrikhand&display=swap" />
+    <!-- Display face "House of cards" is an Adobe Fonts face: add your Adobe Fonts project <link> here and it takes over from Kanit automatically. -->
+  </head>
+  <body>
+    <Header current={current} />
+    <slot />
+    <Footer />
+  </body>
+</html>

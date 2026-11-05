@@ -1,0 +1,99 @@
+---
+import Base from '../../layouts/Base.astro';
+import Gallery from '../../components/Gallery.astro';
+import LogCard from '../../components/LogCard.astro';
+import { getCars, getLog } from '../../lib';
+
+export async function getStaticPaths() {
+  const cars = await getCars();
+  return cars.map((car) => ({ params: { slug: car.id }, props: { car, cars } }));
+}
+const { car, cars } = Astro.props;
+const d = car.data;
+const log = (await getLog()).filter((e) => e.data.car === car.id);
+---
+<Base title={d.name} description={d.tagline} current="garage">
+  <main class="wrap page">
+    <nav class="switch" aria-label="Cars">
+      {cars.map((c) => (
+        <a class:list={['pill', 'sw', { on: c.id === car.id }]} href={`/garage/${c.id}/`} aria-current={c.id === car.id ? 'page' : undefined}>{c.data.short}</a>
+      ))}
+    </nav>
+
+    <section class="top" aria-labelledby="car-title">
+      <div class="stack copy">
+        <span class="label muted">{d.year}</span>
+        <h1 id="car-title" class="display h-page lettering">{d.name}</h1>
+        <span class={`ribbon bg-${d.statusColor}`}>{d.status === 'IN BUILD' ? 'Mid-Build' : d.status[0] + d.status.slice(1).toLowerCase()}</span>
+        <p class="lead">{d.tagline}</p>
+      </div>
+      <figure class="frame tilt">
+        <div class={`ph ${d.hero ? '' : 'placeholder label bg-' + d.color}`} style="aspect-ratio:16/10">
+          {d.hero ? <img src={d.hero.src} alt={d.hero.alt} width="1600" height="1000" fetchpriority="high" /> : <span>[PHOTO COMING SOON]</span>}
+        </div>
+        {d.hero?.credit && <figcaption>Photo: {d.hero.credit}</figcaption>}
+        <img class="flower" src="/art/flower-1.svg" alt="" style="width:200px;right:-70px;top:-76px;transform:rotate(32deg)" />
+        <img class="flower" src="/art/flower-3.svg" alt="" style="width:170px;right:-56px;top:-66px;transform:rotate(6deg)" />
+        <img class="flower hide-sm" src="/art/flower-5.svg" alt="" style="width:80px;right:96px;top:-42px;transform:rotate(-12deg)" />
+        <img class="flower hide-sm" src="/art/flower-4.svg" alt="" style="width:96px;left:-36px;bottom:-40px;transform:rotate(18deg)" />
+      </figure>
+    </section>
+
+    {d.stats.length > 0 && (
+      <section class="stats" aria-label="Quick stats">
+        {d.stats.map((s) => (
+          <div class="card stat"><span class="label muted">{s.label}</span><span class="display statv">{s.value}</span></div>
+        ))}
+        <div class="card stat bg-hot on-bright"><span class="label">STATUS</span><span class="display statv">{d.status}</span></div>
+      </section>
+    )}
+
+    {d.specs.length > 0 && (
+      <section class="stack" style="gap:24px" aria-labelledby="spec-title">
+        <div class="stack" style="gap:8px"><span class="label muted">SPEC SHEET</span><h2 id="spec-title" class="display h-sect">WHAT'S ON IT</h2></div>
+        <div class="specs">
+          {d.specs.map((g) => (
+            <div class="card spec">
+              <h3 class={`display bg-${g.color}`}>{g.title}</h3>
+              <dl>{g.rows.map((r) => (<><dt class="muted">{r.k}</dt><dd>{r.v}</dd></>))}</dl>
+            </div>
+          ))}
+        </div>
+      </section>
+    )}
+
+    {d.gallery.length > 0 && (
+      <section class="stack" style="gap:24px" aria-labelledby="gallery-title">
+        <h2 id="gallery-title" class="display h-sect">GALLERY</h2>
+        <Gallery shots={d.gallery} />
+      </section>
+    )}
+
+    {log.length > 0 && (
+      <section class="stack" style="gap:24px" aria-labelledby="log-title">
+        <div class="head"><h2 id="log-title" class="display h-sect">BUILD ENTRIES</h2><a href="/build-log/"><strong>Whole build log</strong></a></div>
+        {log.map((e) => <LogCard entry={e} carLabel={d.code} carColor={d.color} />)}
+      </section>
+    )}
+  </main>
+</Base>
+<style>
+  .page { padding-top: 32px; padding-bottom: 48px; display: flex; flex-direction: column; gap: 48px; }
+  .switch { display: flex; flex-wrap: wrap; gap: 16px; }
+  .sw { min-height: 44px; display: inline-flex; align-items: center; padding: 8px 20px; border-width: 4px; box-shadow: var(--shadow); }
+  .sw.on { background: var(--hibiscus-400); color: var(--ink); }
+  .top { display: flex; flex-wrap: wrap; gap: 48px; align-items: center; }
+  .copy { flex: 1 1 480px; min-width: 0; gap: 16px; }
+  .tilt { flex: 1 1 520px; min-width: 0; transform: rotate(-2deg); }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; }
+  .stat { padding: 24px; display: flex; flex-direction: column; gap: 4px; }
+  .statv { font-size: 32px; line-height: 36px; }
+  .specs { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 32px; }
+  .spec { overflow: hidden; }
+  .spec h3 { margin: 0; padding: 16px 24px; border-bottom: 4px solid var(--ink); font-size: 28px; line-height: 32px; color: var(--ink); }
+  dl { margin: 0; padding: 8px 24px 24px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); column-gap: 16px; }
+  dt, dd { margin: 0; padding: 12px 0; border-bottom: 2px solid var(--hair); }
+  dd { font-weight: 700; }
+  dt:last-of-type, dd:last-of-type { border-bottom: 0; }
+  .head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px; }
+</style>

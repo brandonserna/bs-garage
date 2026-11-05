@@ -1,0 +1,24 @@
+---
+import type { CollectionEntry } from 'astro:content';
+interface Props { entry: CollectionEntry<'log'>; carLabel: string; carColor: string; compact?: boolean }
+const { entry, carLabel, carColor, compact = false } = Astro.props;
+const d = entry.data;
+const date = d.date?.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' });
+---
+<a class="card btn-card" href={`/build-log/${entry.id}/`}>
+  <span class={`badge bg-${carColor} display`} aria-hidden="true">{carLabel}</span>
+  <span class="stack txt">
+    <span class="meta muted">{date ? `${date} · ` : ''}{d.topic}</span>
+    <span class="display ttl">{d.title}</span>
+    {!compact && <span>{d.summary}</span>}
+  </span>
+</a>
+<style>
+  .btn-card { display: flex; gap: 24px; align-items: center; padding: 24px; color: var(--text); text-decoration: none; transition: transform .08s, box-shadow .08s; }
+  .btn-card:hover { color: var(--text); transform: translate(-1px, -1px); box-shadow: 7px 7px 0 var(--outline); }
+  .badge { flex: none; min-width: 64px; height: 64px; padding: 0 6px; border: 4px solid var(--ink); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; color: var(--ink); }
+  .txt { gap: 4px; min-width: 0; }
+  .meta { font-size: 12px; line-height: 16px; }
+  .ttl { font-size: 28px; line-height: 32px; }
+  @media (max-width: 600px) { .btn-card { padding: 16px; gap: 14px; } .ttl { font-size: 24px; line-height: 28px; } }
+</style>
