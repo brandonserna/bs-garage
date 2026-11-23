@@ -19,16 +19,15 @@ const highlights = s14.data.gallery.slice(0, 6);
     <div class="wrap hero-row">
       <div class="stack hero-copy">
         <div class="kicker">
-          <span class="flash since">since day one</span>
           <span class="label muted">{site.location.toUpperCase()}</span>
         </div>
         <h1 id="hero-title" class="display h-hero lettering">BS Garage</h1>
         <p class="lead">Follow my journey</p>
         <div class="ctas">
-          <a class="btn" href="#garage">MEET THE CARS
+          <a class="btn" href="#garage">CARS
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
-          <a class="btn cyan" href="/build-log/">READ THE BUILD LOG</a>
+          <a class="btn cyan" href="/build-log/">BUILD LOG</a>
         </div>
         <div class="socials">
           <a class="btn sm cyan" href={site.youtube} target="_blank" rel="noopener">YOUTUBE</a>
@@ -52,10 +51,9 @@ const highlights = s14.data.gallery.slice(0, 6);
   <section id="garage" class="wrap sect" aria-labelledby="garage-title">
     <div class="sect-head">
       <div class="stack" style="gap:8px">
-        <span class="label muted">THE GARAGE</span>
-        <h2 id="garage-title" class="display h-sect">TWO CARS</h2>
+        <h2 id="garage-title" class="display h-sect">CARS</h2>
       </div>
-      <a href="/garage/s14/"><strong>See every spec sheet</strong></a>
+      <a href="/garage/s14/"><strong>Specs</strong></a>
     </div>
     <div class="cars">{cars.map((car) => <CarCard car={car} />)}</div>
   </section>
@@ -63,15 +61,14 @@ const highlights = s14.data.gallery.slice(0, 6);
   <section class="wrap sect latest" aria-label="Latest from the garage">
     <div class="stack feed">
       <div class="stack" style="gap:8px">
-        <span class="label muted">BUILD LOG</span>
-        <h2 class="display h-sect">FRESH OFF THE BENCH</h2>
+        <h2 class="display h-sect">BUILD LOG</h2>
       </div>
       {log.map((e) => <LogCard entry={e} carLabel={byId[e.data.car].data.code} carColor={byId[e.data.car].data.color} />)}
       <a href="/build-log/"><strong>All entries</strong></a>
     </div>
     <aside id="events" class="next card-blue" aria-labelledby="events-title">
       <img class="flower" src="/art/flower-3.svg" alt="" style="width:124px;right:-40px;top:-60px;transform:rotate(12deg)" />
-      <span class="ribbon bg-hot">Next Session</span>
+      <span class="ribbon bg-hot">Next Event</span>
       <h2 id="events-title" class="display" style="font-size:40px;line-height:40px">TBD</h2>
       <p style="margin:0;font-size:18px;line-height:28px;font-weight:700">Stay tuned.</p>
     </aside>
@@ -80,8 +77,7 @@ const highlights = s14.data.gallery.slice(0, 6);
   <section class="wrap sect" aria-labelledby="track-title">
     <div class="sect-head">
       <div class="stack" style="gap:8px">
-        <span class="label muted">ON TRACK</span>
-        <h2 id="track-title" class="display h-sect">DRIFTING</h2>
+        <h2 id="track-title" class="display h-sect">PHOTOS</h2>
       </div>
       <a href="/garage/s14/#gallery"><strong>All S14 photos</strong></a>
     </div>
@@ -91,11 +87,9 @@ const highlights = s14.data.gallery.slice(0, 6);
   <section class="wrap sect" aria-labelledby="partners-h">
     <div class="sect-head">
       <div class="stack" style="gap:8px">
-        <span class="label muted"></span>
         <h2 id="partners-h" class="display h-sect">FRIENDS</h2>
       </div>
     </div>
-    <p class="lead" style="margin-bottom:24px"></p>
     <!-- add a partner in src/data/partners.json (logo goes in public/art/partners/); add "url" to make it a link -->
     <ul class="partners">
       {partners.map((p, i) => {

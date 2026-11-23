@@ -50,7 +50,7 @@ const log = (await getLog()).filter((e) => e.data.car === car.id);
 
     {d.specs.length > 0 && (
       <section class="stack" style="gap:24px" aria-labelledby="spec-title">
-        <div class="stack" style="gap:8px"><span class="label muted">SPEC SHEET</span><h2 id="spec-title" class="display h-sect">WHAT'S ON IT</h2></div>
+        <div class="stack" style="gap:8px"><h2 id="spec-title" class="display h-sect">SPECS</h2></div>
         <div class="specs">
           {d.specs.map((g) => (
             <div class="card spec">
@@ -71,7 +71,7 @@ const log = (await getLog()).filter((e) => e.data.car === car.id);
 
     {log.length > 0 && (
       <section class="stack" style="gap:24px" aria-labelledby="log-title">
-        <div class="head"><h2 id="log-title" class="display h-sect">BUILD ENTRIES</h2><a href="/build-log/"><strong>Whole build log</strong></a></div>
+        <div class="head"><h2 id="log-title" class="display h-sect">BUILD LOG</h2><a href="/build-log/"><strong>All entries</strong></a></div>
         {log.map((e) => <LogCard entry={e} carLabel={d.code} carColor={d.color} />)}
       </section>
     )}

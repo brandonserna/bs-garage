@@ -4,7 +4,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 
 interface Props { title?: string; description?: string; current?: string; }
-const { title, description = 'Two cars, one garage, a lot of tire smoke. Built at home in Littleton, CO and driven sideways.', current = '' } = Astro.props;
+const { title, description = 'Drift cars built in Denver, CO: a Nissan S14 and a 350Z.', current = '' } = Astro.props;
 const fullTitle = title ? `${title} — BS Garage` : 'BS Garage';
 ---
 <!doctype html>

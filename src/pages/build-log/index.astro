@@ -9,14 +9,11 @@ const byId = Object.fromEntries(cars.map((c) => [c.id, c]));
 const log = await getLog();
 const topics = [...new Set(log.map((e) => e.data.topic))];
 ---
-<Base title="Build log" description="Every part, every mistake, every coat of clear. Newest first." current="log">
+<Base title="Build log" description="Build videos from the S14 and the 350Z, newest first." current="log">
   <main class="wrap page">
     <section class="intro stack" aria-labelledby="log-title">
-      <div class="kicker">
-        <span class="flash since">grease &amp; paint</span>
-      </div>
       <h1 id="log-title" class="display h-page lettering">BUILD LOG</h1>
-      <p class="lead">Every part, every mistake, every coat of clear. Newest first.</p>
+      <p class="lead">Newest first.</p>
       <img class="flower hide-sm" src="/art/flower-1.svg" alt="" style="width:240px;right:-20px;top:30px;transform:rotate(-28deg)" />
       <img class="flower hide-sm" src="/art/flower-2.svg" alt="" style="width:210px;right:40px;top:-16px;transform:rotate(8deg)" />
     </section>
@@ -37,8 +34,7 @@ const topics = [...new Set(log.map((e) => e.data.topic))];
       <aside class="stack side">
         <section class="follow" aria-labelledby="follow-title">
           <img class="flower" src="/art/flower-4.svg" alt="" style="width:96px;right:-30px;top:-42px;transform:rotate(16deg)" />
-          <span class="ribbon" style="background:var(--raised);color:var(--text)">Follow Along</span>
-          <h2 id="follow-title" class="display" style="font-size:32px;line-height:36px">NEW ENTRY? SEE IT FIRST</h2>
+          <h2 id="follow-title" class="display" style="font-size:32px;line-height:36px">FOLLOW</h2>
           <a class="btn cyan" style="background:var(--plumeria-500)" href={site.youtube} target="_blank" rel="noopener">YOUTUBE</a>
           <a class="btn" style="background:var(--raised);color:var(--text);border-color:var(--outline);box-shadow:4px 4px 0 var(--outline)" href={site.instagram} target="_blank" rel="noopener">INSTAGRAM</a>
         </section>
