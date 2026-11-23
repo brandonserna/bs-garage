@@ -62,6 +62,17 @@ const log = (await getLog()).filter((e) => e.data.car === car.id);
       </section>
     )}
 
+    {d.sim && (
+      <section class="card sim" aria-labelledby="sim-title">
+        <div class="stack" style="gap:8px">
+          <span class="label muted">{d.sim.game.toUpperCase()}</span>
+          <h2 id="sim-title" class="display h-title">{d.sim.title}</h2>
+          {d.sim.note && <p style="margin:0">{d.sim.note}</p>}
+        </div>
+        <a class="btn" href={d.sim.url} target="_blank" rel="noopener">DOWNLOAD</a>
+      </section>
+    )}
+
     {d.gallery.length > 0 && (
       <section class="stack" style="gap:24px" aria-labelledby="gallery-title">
         <h2 id="gallery-title" class="display h-sect">GALLERY</h2>
@@ -95,5 +106,6 @@ const log = (await getLog()).filter((e) => e.data.car === car.id);
   dt, dd { margin: 0; padding: 12px 0; border-bottom: 2px solid var(--hair); }
   dd { font-weight: 700; }
   dt:last-of-type, dd:last-of-type { border-bottom: 0; }
+  .sim { padding: 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px; }
   .head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px; }
 </style>

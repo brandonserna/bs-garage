@@ -22,6 +22,12 @@ const cars = defineCollection({
       color: z.enum(['cyan', 'green', 'pink']),
       rows: z.array(z.object({ k: z.string(), v: z.string() })),
     })).default([]),
+    sim: z.object({               // drivable version in a sim
+      game: z.string(),
+      title: z.string(),
+      note: z.string().optional(),
+      url: z.string().url(),
+    }).optional(),
     gallery: z.array(z.object({ src: z.string(), alt: z.string(), credit: z.string().optional(), tall: z.boolean().optional() })).default([]),
   }),
 });
