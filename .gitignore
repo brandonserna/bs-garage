@@ -1,0 +1,6 @@
+node_modules/
+dist/
+.astro/
+.DS_Store
+# full-size originals; web copies live in public/photos
+media/
